@@ -10,7 +10,7 @@
         <Version>1.0.0</Version>
         <Authors>Gilfoylex@outlook.com</Authors>
         <Description>解析webp和gif文件</Description>
-        <PackageProjectUrl>https://github.com/Gilfoylex/ImageLoader.git</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Gilfoylex/ImageLoader.git</RepositoryUrl>
         <IsTool>true</IsTool>
         <!--<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>-->
         <NoWarn>NU5131</NoWarn>
