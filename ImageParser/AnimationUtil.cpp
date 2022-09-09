@@ -797,8 +797,10 @@ bool ReadAnimatedImage(const uint8_t* data, const size_t data_size, AnimatedImag
             filename);
         ok = false;
     }
-    if (!ok) ClearAnimatedImage(image);
-    WebPDataClear(&webp_data);
+
+    if (!ok) 
+        ClearAnimatedImage(image);
+
     return ok;
 }
 

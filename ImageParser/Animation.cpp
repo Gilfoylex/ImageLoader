@@ -25,18 +25,20 @@ namespace ImageParser
         CleanUp();
         m_pImage_ = new AnimatedImage();
         pin_ptr<const wchar_t> wfile_name = PtrToStringChars(file_name);
-        m_Ok_ = 1 == ReadAnimatedImage(wfile_name, m_pImage_, 0, nullptr);
+        m_Ok_ = ReadAnimatedImage(wfile_name, m_pImage_, 0, nullptr);
 
         return m_Ok_;
     }
 
     bool Animation::ParseAnimationFrames(array<System::Byte>^ bytes)
     {
+        if (bytes == nullptr)
+            return false;
+
         CleanUp();
         m_pImage_ = new AnimatedImage();
-        const auto data = static_cast<uint8_t*>(malloc(bytes->Length));
-        System::Runtime::InteropServices::Marshal::Copy(bytes, 0, IntPtr(data), bytes->Length);
-        m_Ok_ = ReadAnimatedImage(data, bytes->Length, m_pImage_, 0, nullptr);
+        auto unmanaged_ptr = Runtime::InteropServices::Marshal::UnsafeAddrOfPinnedArrayElement(bytes, 0);
+        m_Ok_ = ReadAnimatedImage(static_cast<uint8_t*>(unmanaged_ptr.ToPointer()), bytes->Length, m_pImage_, 0, nullptr);
 
         return m_Ok_;
     }

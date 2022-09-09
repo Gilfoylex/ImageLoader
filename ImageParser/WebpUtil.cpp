@@ -19,7 +19,10 @@ static void CalculateScaling(const int ori_width, const int ori_height, int& sca
 
     // 数据合法校验
     if (ori_width <= 0 && ori_height <= 0)
+    {
+        WFPRINTF(L"ori_width and ori_height Invalid\n");
         return;
+    }
 
     const auto ratio = static_cast<float>(ori_width) / static_cast<float>(ori_height);
     if (scale_width > 0 && scale_height == 0)
@@ -52,7 +55,10 @@ static bool AllocateExternalData(WebpImage* const image, WebPDecoderConfig* conf
     const size_t data_size = stride * h;
     const auto external_buffer = static_cast<uint8_t* const>(WebPMalloc(data_size));
     if (external_buffer == nullptr)
+    {
+        WFPRINTF(L"external_buffer alloc fail.\n");
         return false;
+    }
 
     WebPDecBuffer* const output_buffer = &config->output;
     output_buffer->u.RGBA.stride = stride;
@@ -110,6 +116,7 @@ static bool ReadWebpImage(const wchar_t* file_name, const WebPData* const webp_d
 
     if (!AllocateExternalData(image, &config))
     {
+        WFPRINTF(L"AllocateExternalData fail, file: %s\n", file_name);
         return false;
     }
 
@@ -152,8 +159,6 @@ bool ParseWebpImage(const uint8_t* data, const size_t data_size, WebpImage* cons
     const auto ok = ReadWebpImage(file_name, &webp_data, image, scale_width, scale_height);
     if (!ok)
         CleanWebpExternalData(image);
-
-    WebPDataClear(&webp_data);
 
     return ok;
 }

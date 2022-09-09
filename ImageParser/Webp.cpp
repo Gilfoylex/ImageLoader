@@ -33,11 +33,13 @@ namespace ImageParser
 
     bool Webp::ParseWebpMemBytes(array<System::Byte>^ bytes, const int decode_width, const int decode_height)
     {
+        if (bytes == nullptr)
+            return false;
+
         CleanUp();
         m_pWebpData_ = new WebpImage();
-        const auto data = static_cast<uint8_t*>(malloc(bytes->Length));
-        System::Runtime::InteropServices::Marshal::Copy(bytes, 0, IntPtr(data), bytes->Length);
-        m_Ok_ = ParseWebpImage(data, bytes->Length, m_pWebpData_, decode_width, decode_height);
+        auto unmanaged_ptr = Runtime::InteropServices::Marshal::UnsafeAddrOfPinnedArrayElement(bytes, 0);
+        m_Ok_ = ParseWebpImage(static_cast<uint8_t*>(unmanaged_ptr.ToPointer()), bytes->Length, m_pWebpData_, decode_width, decode_height);
 
         return m_Ok_;
     }
