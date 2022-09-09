@@ -99,17 +99,17 @@ namespace ImageLoader
             var width = ani.GetCavWidth();
             var pf = ani.HasAlpha() ? PixelFormats.Bgra32 : PixelFormats.Bgr32;
             var rawStride = (width * pf.BitsPerPixel + 7) / 8;
-            while (index < count)
+            for (; index < count; ++index)
             {
-                ani.GetFrameAt(index, out var dataPtr, out var dataSize, out var duration);
+                if (!ani.GetFrameAt(index, out var dataPtr, out var dataSize, out var duration))
+                    continue;
+
                 var bitmap = BitmapSource.Create(width, height, 96, 96, pf, null, dataPtr, dataSize, rawStride);
                 frames.Add(new KeyFrame
                 {
                     AFrame = bitmap,
                     Duration = duration
                 });
-
-                ++index;
             }
         }
 
@@ -122,9 +122,12 @@ namespace ImageLoader
             var width = webp.GetCavWidth();
             var pf = webp.HasAlpha() ? PixelFormats.Bgra32 : PixelFormats.Bgr32;
             var rawStride = (width * pf.BitsPerPixel + 7) / 8;
-            webp.GetFrameData(out var dataPtr, out var dataSize);
-            var bitmap = BitmapSource.Create(width, height, 96, 96, pf, null, dataPtr, dataSize, rawStride);
-            return bitmap;
+            if (webp.GetFrameData(out var dataPtr, out var dataSize))
+            {
+                return BitmapSource.Create(width, height, 96, 96, pf, null, dataPtr, dataSize, rawStride);
+            }
+
+            return null;
         }
     }
 }
