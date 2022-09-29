@@ -569,8 +569,8 @@ static int ReadAnimatedGIF(const wchar_t* filename, GifReadData* const gif_data,
         return 0;
     }
 
-    // GIF Ã»ÓÐalpha
-    image->has_alpha = false;
+    // GIF default true
+    image->has_alpha = true;
 
     // Animation properties.
     image->canvas_width = static_cast<uint32_t>(gif->SWidth);
